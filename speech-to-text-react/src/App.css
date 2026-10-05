@@ -11,8 +11,12 @@ body {
         sans-serif;
 
     background: #f5f7fa;
-
     color: #202124;
+}
+
+button,
+input {
+    font-family: inherit;
 }
 
 .app {
@@ -31,15 +35,18 @@ body {
 
     padding: 40px;
 
-    background: white;
+    background: #ffffff;
 
     border: 1px solid #e1e5ea;
-
     border-radius: 12px;
 
     box-shadow:
         0 4px 18px rgba(0, 0, 0, 0.08);
 }
+
+/* =========================
+   HEADER
+========================= */
 
 h1 {
     text-align: center;
@@ -57,8 +64,290 @@ h1 {
 
     font-size: 14px;
 
+    margin-bottom: 30px;
+}
+
+/* =========================
+   AUTHENTICATION
+========================= */
+
+.auth-container {
+    width: 100%;
+    max-width: 420px;
+
+    margin: 0 auto;
+}
+
+.auth-container h2 {
+    text-align: center;
+
+    font-size: 24px;
+    font-weight: 600;
+
+    margin-bottom: 8px;
+}
+
+.auth-subtitle {
+    text-align: center;
+
+    color: #6b7280;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+
     margin-bottom: 24px;
 }
+
+.auth-container form {
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+.auth-container label {
+    color: #374151;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    margin-top: 8px;
+}
+
+.auth-container input {
+    width: 100%;
+
+    height: 44px;
+
+    padding: 0 12px;
+
+    background: #ffffff;
+
+    border: 1px solid #c7cdd4;
+    border-radius: 6px;
+
+    color: #202124;
+
+    font-size: 14px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.auth-container input::placeholder {
+    color: #9ca3af;
+}
+
+.auth-container input:focus {
+    border-color: #1a73e8;
+
+    box-shadow:
+        0 0 0 2px rgba(26, 115, 232, 0.12);
+}
+
+/* =========================
+   AUTH BUTTON
+========================= */
+
+.auth-button {
+    width: 100%;
+
+    height: 44px;
+
+    margin-top: 16px;
+
+    border: 1px solid #1a73e8;
+    border-radius: 6px;
+
+    background: #1a73e8;
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.auth-button:hover:not(:disabled) {
+    background: #1769d1;
+    border-color: #1769d1;
+}
+
+.auth-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* =========================
+   FORGOT PASSWORD
+========================= */
+
+.forgot-password-button {
+    display: block;
+
+    margin: 16px auto 0;
+
+    padding: 0;
+
+    border: none;
+
+    background: transparent;
+
+    color: #1a73e8;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    cursor: pointer;
+}
+
+.forgot-password-button:hover {
+    text-decoration: underline;
+}
+
+/* =========================
+   AUTH SWITCH
+========================= */
+
+.auth-switch {
+    margin-top: 24px;
+
+    text-align: center;
+
+    color: #6b7280;
+
+    font-size: 14px;
+}
+
+.auth-switch button {
+    padding: 0;
+
+    border: none;
+
+    background: transparent;
+
+    color: #1a73e8;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    cursor: pointer;
+}
+
+.auth-switch button:hover {
+    text-decoration: underline;
+}
+
+/* =========================
+   AUTH MESSAGES
+========================= */
+
+.auth-error {
+    margin-top: 8px;
+
+    padding: 10px 12px;
+
+    background: #fef2f2;
+
+    border: 1px solid #fecaca;
+    border-radius: 6px;
+
+    color: #b42318;
+
+    font-size: 13px;
+
+    line-height: 1.4;
+}
+
+.auth-success {
+    margin-top: 8px;
+
+    padding: 10px 12px;
+
+    background: #f0fdf4;
+
+    border: 1px solid #bbf7d0;
+    border-radius: 6px;
+
+    color: #166534;
+
+    font-size: 13px;
+
+    line-height: 1.4;
+}
+
+.auth-loading {
+    text-align: center;
+
+    color: #6b7280;
+
+    font-size: 14px;
+}
+
+/* =========================
+   USER BAR
+========================= */
+
+.user-bar {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 16px;
+
+    margin-bottom: 20px;
+
+    padding: 10px 12px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e1e5ea;
+    border-radius: 7px;
+
+    color: #6b7280;
+
+    font-size: 13px;
+}
+
+.user-bar strong {
+    color: #374151;
+
+    font-weight: 500;
+}
+
+.logout-button {
+    height: 34px;
+
+    padding: 0 12px;
+
+    border: 1px solid #c7cdd4;
+    border-radius: 6px;
+
+    background: #ffffff;
+
+    color: #374151;
+
+    font-size: 13px;
+
+    cursor: pointer;
+}
+
+.logout-button:hover {
+    background: #f3f4f6;
+}
+
+/* =========================
+   STATUS
+========================= */
 
 .status {
     display: flex;
@@ -101,6 +390,31 @@ h1 {
     }
 }
 
+/* =========================
+   OFFLINE
+========================= */
+
+.offline-status {
+    margin-bottom: 14px;
+
+    padding: 10px 12px;
+
+    background: #fff8e1;
+
+    border: 1px solid #f0d98c;
+    border-radius: 6px;
+
+    color: #7a5a00;
+
+    font-size: 13px;
+
+    text-align: center;
+}
+
+/* =========================
+   TRANSCRIPT
+========================= */
+
 .result {
     width: 100%;
 
@@ -111,7 +425,6 @@ h1 {
     background: #fafbfc;
 
     border: 1px solid #d9dee5;
-
     border-radius: 8px;
 
     font-size: 16px;
@@ -134,6 +447,10 @@ h1 {
 
     font-size: 14px;
 }
+
+/* =========================
+   SPEECH CONTROLS
+========================= */
 
 .controls {
     display: flex;
@@ -206,6 +523,40 @@ h1 {
     transform: scale(0.98);
 }
 
+/* =========================
+   SAVE
+========================= */
+
+.save-button {
+    display: block;
+
+    width: 100%;
+
+    height: 42px;
+
+    margin-top: 16px;
+
+    border: 1px solid #c7cdd4;
+    border-radius: 7px;
+
+    background: #ffffff;
+
+    color: #374151;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    cursor: pointer;
+}
+
+.save-button:hover {
+    background: #f3f4f6;
+}
+
+/* =========================
+   WORD COUNT
+========================= */
+
 .word-count {
     margin-top: 16px;
 
@@ -216,13 +567,181 @@ h1 {
     font-size: 13px;
 }
 
+/* =========================
+   HISTORY
+========================= */
+
+.history {
+    margin-top: 32px;
+
+    padding-top: 24px;
+
+    border-top: 1px solid #e5e7eb;
+}
+
+.history-header {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 12px;
+
+    margin-bottom: 14px;
+}
+
+.history-header h2 {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.history-clear {
+    padding: 7px 10px;
+
+    border: 1px solid #c7cdd4;
+    border-radius: 6px;
+
+    background: white;
+
+    color: #374151;
+
+    font-size: 12px;
+
+    cursor: pointer;
+}
+
+.history-clear:hover {
+    background: #f3f4f6;
+}
+
+.history-search {
+    width: 100%;
+
+    height: 40px;
+
+    margin-bottom: 14px;
+
+    padding: 0 12px;
+
+    border: 1px solid #d9dee5;
+    border-radius: 6px;
+
+    outline: none;
+
+    font-size: 14px;
+}
+
+.history-search:focus {
+    border-color: #1a73e8;
+
+    box-shadow:
+        0 0 0 2px rgba(26, 115, 232, 0.1);
+}
+
+.history-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+.history-item {
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 16px;
+
+    padding: 14px;
+
+    background: #fafbfc;
+
+    border: 1px solid #e1e5ea;
+    border-radius: 7px;
+}
+
+.history-content {
+    flex: 1;
+}
+
+.history-content p {
+    margin-bottom: 6px;
+
+    color: #374151;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+}
+
+.history-content small {
+    color: #9ca3af;
+
+    font-size: 11px;
+}
+
+.history-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+}
+
+.history-load,
+.history-delete {
+    padding: 6px 9px;
+
+    border-radius: 5px;
+
+    font-size: 12px;
+
+    cursor: pointer;
+}
+
+.history-load {
+    border: 1px solid #bfdbfe;
+
+    background: #eff6ff;
+
+    color: #1d4ed8;
+}
+
+.history-delete {
+    border: 1px solid #fecaca;
+
+    background: #fef2f2;
+
+    color: #b42318;
+}
+
+.history-load:hover,
+.history-delete:hover {
+    opacity: 0.85;
+}
+
+.history-empty {
+    padding: 20px;
+
+    color: #9ca3af;
+
+    font-size: 14px;
+
+    text-align: center;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
 @media (max-width: 600px) {
     .app {
         padding: 15px;
     }
 
     .container {
-        padding: 25px 18px;
+        padding: 28px 20px;
     }
 
     h1 {
@@ -239,5 +758,24 @@ h1 {
 
     .controls button {
         flex: 1;
+    }
+
+    .history-item {
+        flex-direction: column;
+    }
+
+    .history-actions {
+        justify-content: flex-end;
+    }
+
+    .user-bar {
+        flex-direction: column;
+        align-items: stretch;
+
+        text-align: center;
+    }
+
+    .logout-button {
+        width: 100%;
     }
 }

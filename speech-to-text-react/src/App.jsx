@@ -1,123 +1,187 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+
 import "./App.css";
 
+import Header from "./components/Header";
+import StatusIndicator from "./components/StatusIndicator";
+import Transcript from "./components/Transcript";
+import SpeechControls from "./components/SpeechControls";
+import WordCount from "./components/WordCount";
+import History from "./components/History";
+import LoginForm from "./components/LoginForm";
+import RegisterForm from "./components/RegisterForm";
+import ForgotPasswordForm from "./components/ForgotPasswordForm";
+import UpdatePasswordForm from "./components/UpdatePasswordForm";
+
+import { useSpeechRecognition } from "./hooks/useSpeechRecognition";
+import { useNetworkStatus } from "./hooks/useNetworkStatus";
+import { useSpeechHistory } from "./hooks/useSpeechHistory";
+import { useAuth } from "./hooks/useAuth";
+
 function App() {
-    const recognitionRef = useRef(null);
+    const queryClient = useQueryClient();
 
-    const [transcript, setTranscript] = useState("");
-    const [isListening, setIsListening] = useState(false);
-    const [error, setError] = useState("");
+    const [authMode, setAuthMode] = useState("login");
 
-    const startRecognition = () => {
-        setError("");
+    const {
+        session,
+        user,
+        loading: authLoading,
+        error: authError,
+        login,
+        register,
+        logout,
+        isRecoveryMode,
+        changePassword,
+        sendPasswordReset,
+    } = useAuth();
 
-        const SpeechRecognition =
-            window.SpeechRecognition ||
-            window.webkitSpeechRecognition;
+    const {
+        transcript,
+        isListening,
+        error,
+        startRecognition,
+        stopRecognition,
+        clearTranscript,
+        loadTranscript,
+    } = useSpeechRecognition();
 
-        if (!SpeechRecognition) {
-            setError(
-                "Speech recognition is not supported in this browser."
-            );
-            return;
+    const isOnline = useNetworkStatus();
+
+    const {
+        history,
+        isLoading: historyLoading,
+        error: historyError,
+        addSession,
+        deleteSession,
+        clearHistory,
+        isSaving,
+        isDeleting,
+        isClearing,
+    } = useSpeechHistory(user?.id);
+
+    const handleLogout = async () => {
+        try {
+            await logout();
+        } finally {
+            // Always clear server-state cache after logout.
+            // This prevents another user from seeing
+            // cached data from the previous account.
+            queryClient.clear();
         }
-
-        const recognition = new SpeechRecognition();
-
-        recognitionRef.current = recognition;
-
-        recognition.continuous = true;
-        recognition.interimResults = true;
-        recognition.lang = "en-US";
-
-        recognition.onstart = () => {
-            setIsListening(true);
-        };
-
-        recognition.onresult = (event) => {
-            let finalText = "";
-
-            for (
-                let i = event.resultIndex;
-                i < event.results.length;
-                i++
-            ) {
-                const text =
-                    event.results[i][0].transcript;
-
-                if (event.results[i].isFinal) {
-                    finalText += text;
-                }
-            }
-
-            if (finalText) {
-                setTranscript((previous) => {
-                    return previous + finalText;
-                });
-            }
-        };
-
-        recognition.onerror = (event) => {
-            console.error(event.error);
-
-            setError(
-                "Speech recognition error: " + event.error
-            );
-
-            setIsListening(false);
-        };
-
-        recognition.onend = () => {
-            setIsListening(false);
-        };
-
-        recognition.start();
     };
 
-    const stopRecognition = () => {
-        if (recognitionRef.current) {
-            recognitionRef.current.stop();
-            recognitionRef.current = null;
-        }
+    if (authLoading) {
+        return (
+            <div className="app">
+                <div className="container">
+                    <p className="auth-loading">
+                        Loading...
+                    </p>
+                </div>
+            </div>
+        );
+    }
 
-        setIsListening(false);
-    };
+    if (isRecoveryMode) {
+        return (
+            <div className="app">
+                <div className="container">
+                    <Header />
 
-    const clearTranscript = () => {
-        setTranscript("");
-        setError("");
-    };
+                    <UpdatePasswordForm
+                        onUpdatePassword={changePassword}
+                        error={authError}
+                        onBackToLogin={() => {
+                            setAuthMode("login");
+                        }}
+                    />
+                </div>
+            </div>
+        );
+    }
 
-    const wordCount =
-        transcript.trim() === ""
-            ? 0
-            : transcript.trim().split(/\s+/).length;
+    if (!session) {
+        return (
+            <div className="app">
+                <div className="container">
+                    <Header />
+
+                    {authMode === "login" && (
+                        <LoginForm
+                            onLogin={login}
+                            error={authError}
+                            onSwitchToRegister={() =>
+                                setAuthMode("register")
+                            }
+                            onForgotPassword={() =>
+                                setAuthMode(
+                                    "forgot-password"
+                                )
+                            }
+                        />
+                    )}
+
+                    {authMode === "register" && (
+                        <RegisterForm
+                            onRegister={register}
+                            error={authError}
+                            onSwitchToLogin={() =>
+                                setAuthMode("login")
+                            }
+                        />
+                    )}
+
+                    {authMode === "forgot-password" && (
+                        <ForgotPasswordForm
+                            onResetPassword={
+                                sendPasswordReset
+                            }
+                            error={authError}
+                            onBackToLogin={() =>
+                                setAuthMode("login")
+                            }
+                        />
+                    )}
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="app">
-
             <div className="container">
+                <Header />
 
-                <h1>Speech to Text</h1>
+                <div className="user-bar">
+                    <span>
+                        Signed in as{" "}
+                        <strong>{user?.email}</strong>
+                    </span>
 
-                <p className="subtitle">
-                    Speak naturally and your words will appear here.
-                </p>
+                    <button
+                        className="logout-button"
+                        onClick={handleLogout}
+                    >
+                        Sign out
+                    </button>
+                </div>
 
-                {isListening && (
-                    <div className="status">
-                        <span className="status-dot"></span>
-                        Listening...
+                <StatusIndicator
+                    isListening={isListening}
+                />
+
+                {!isOnline && (
+                    <div className="offline-status">
+                        You are offline. Saved transcript
+                        and cached history remain available.
                     </div>
                 )}
 
-                <div className="result">
-                    {transcript || (
-                        <span className="placeholder">
-                            Your speech will appear here...
-                        </span>
-                    )}
-                </div>
+                <Transcript
+                    transcript={transcript}
+                />
 
                 {error && (
                     <p className="error">
@@ -125,43 +189,60 @@ function App() {
                     </p>
                 )}
 
-                <div className="controls">
+                <SpeechControls
+                    isListening={isListening}
+                    isOnline={isOnline}
+                    onStart={startRecognition}
+                    onStop={stopRecognition}
+                    onClear={clearTranscript}
+                />
 
+                {transcript.trim() && (
                     <button
-                        className="start-button"
-                        onClick={startRecognition}
-                        disabled={isListening}
+                        className="save-button"
+                        onClick={() =>
+                            addSession(transcript)
+                        }
+                        disabled={isSaving}
                     >
-                        🎤
-                        <span>
-                            {isListening ? "Listening" : "Start"}
-                        </span>
+                        {isSaving
+                            ? "Saving..."
+                            : "Save Transcript"}
                     </button>
+                )}
 
-                    <button
-                        className="stop-button"
-                        onClick={stopRecognition}
-                    >
-                        ■
-                        <span>Stop</span>
-                    </button>
+                <WordCount
+                    transcript={transcript}
+                />
 
-                    <button
-                        className="clear-button"
-                        onClick={clearTranscript}
-                    >
-                        Clear
-                    </button>
+                {historyLoading && (
+                    <p className="history-status">
+                        Loading history...
+                    </p>
+                )}
 
-                </div>
+                {!isOnline && history.length > 0 && (
+                    <p className="history-status">
+                        Showing cached speech history.
+                    </p>
+                )}
 
-                <div className="word-count">
-                    {wordCount}{" "}
-                    {wordCount === 1 ? "word" : "words"}
-                </div>
+                {historyError &&
+                    history.length === 0 && (
+                        <p className="error">
+                            Unable to load speech history.
+                        </p>
+                    )}
 
+                <History
+                    history={history}
+                    onLoad={loadTranscript}
+                    onDelete={deleteSession}
+                    onClear={clearHistory}
+                    isDeleting={isDeleting}
+                    isClearing={isClearing}
+                />
             </div>
-
         </div>
     );
 }
