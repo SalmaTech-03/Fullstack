@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Speech to Text</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.css"
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"
+    >
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h2>Speech to Text</h2>
+
+        <p class="subtitle">
+            Speak naturally and your words will appear here.
+        </p>
+
+        <div id="result"></div>
+
+        <div class="controls">
+
+            <button onclick="startRecognition()" class="mic-button">
+                <i class="fa fa-microphone"></i>
+                <span>Start</span>
+            </button>
+
+            <button onclick="stopConverting()" class="stop-button">
+                <i class="fa fa-stop"></i>
+                <span>Stop</span>
+            </button>
+
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

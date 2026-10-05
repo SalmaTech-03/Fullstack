@@ -1,0 +1,266 @@
+/* Remove browser default spacing */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* Main page */
+body {
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 24px;
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    background: #f5f7fa;
+
+    color: #1f1f1f;
+}
+
+
+/* Main application */
+.container {
+    width: 100%;
+    max-width: 680px;
+
+    padding: 40px;
+
+    background: #ffffff;
+
+    border: 1px solid #e1e5ea;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+
+/* Heading */
+h2 {
+    text-align: center;
+
+    font-size: 28px;
+    font-weight: 600;
+
+    color: #202124;
+
+    margin-bottom: 8px;
+}
+
+
+/* Small description */
+.subtitle {
+    text-align: center;
+
+    font-size: 14px;
+
+    color: #6b7280;
+
+    margin-bottom: 28px;
+}
+
+
+/* Speech result area */
+#result {
+    width: 100%;
+    min-height: 260px;
+
+    padding: 20px;
+
+    background: #fafbfc;
+
+    border: 1px solid #d9dee5;
+
+    border-radius: 8px;
+
+    color: #202124;
+
+    font-size: 16px;
+
+    line-height: 1.7;
+
+    overflow-y: auto;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+/* Result box when user hovers */
+#result:hover {
+    border-color: #b8c0cc;
+}
+
+
+/* Buttons container */
+.controls {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    gap: 14px;
+
+    margin-top: 24px;
+}
+
+
+/* Common button style */
+.controls button {
+    height: 48px;
+
+    padding: 0 22px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 9px;
+
+    border-radius: 7px;
+
+    font-family: inherit;
+
+    font-size: 15px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.15s ease;
+}
+
+
+/* Microphone button */
+.mic-button {
+    min-width: 125px;
+
+    border: 1px solid #1a73e8;
+
+    background: #1a73e8;
+
+    color: white;
+}
+
+
+/* Microphone hover */
+.mic-button:hover {
+    background: #1769d1;
+
+    box-shadow:
+        0 3px 8px rgba(26, 115, 232, 0.25);
+}
+
+
+/* Stop button */
+.stop-button {
+    min-width: 105px;
+
+    border: 1px solid #c7cdd4;
+
+    background: #ffffff;
+
+    color: #374151;
+}
+
+
+/* Stop hover */
+.stop-button:hover {
+    background: #f3f4f6;
+
+    border-color: #aeb5be;
+}
+
+
+/* Button click */
+.controls button:active {
+    transform: scale(0.98);
+}
+
+
+/* Icons */
+.controls button i {
+    font-size: 15px;
+}
+
+
+/* Result scrollbar */
+#result::-webkit-scrollbar {
+    width: 6px;
+}
+
+#result::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#result::-webkit-scrollbar-thumb {
+    background: #c7ccd3;
+
+    border-radius: 10px;
+}
+
+
+/* Tablet */
+@media (max-width: 700px) {
+
+    .container {
+        padding: 30px;
+    }
+
+    #result {
+        min-height: 230px;
+    }
+}
+
+
+/* Mobile */
+@media (max-width: 480px) {
+
+    body {
+        padding: 15px;
+    }
+
+    .container {
+        padding: 24px 18px;
+
+        border-radius: 10px;
+    }
+
+    h2 {
+        font-size: 24px;
+    }
+
+    .subtitle {
+        font-size: 13px;
+    }
+
+    #result {
+        min-height: 220px;
+
+        padding: 16px;
+    }
+
+    .controls {
+        width: 100%;
+    }
+
+    .controls button {
+        flex: 1;
+
+        padding: 0 12px;
+    }
+}
