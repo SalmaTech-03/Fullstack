@@ -10,6 +10,9 @@
 
 A lightweight, real-time speech-to-text web application built using standard HTML, CSS, and vanilla JavaScript. The application leverages the browser's native Web Speech API to convert spoken voice input into text instantly without requiring backend processing.
 
+[Live Demo](https://staticfile-3288e.wasmer.app/)
+
+
 ![Project Preview](https://github.com/SalmaTech-03/Fullstack/blob/main/Speech-to-Text%20Project/project.png)
 
 ---
