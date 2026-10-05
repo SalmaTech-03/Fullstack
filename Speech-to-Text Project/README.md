@@ -101,7 +101,7 @@ Speech-to-Text Project/
 
 ## Related Projects
 
-* **[React Version](https://www.google.com/search?q=../speech-to-text-react/)** — A component-based version of this project built using React.
+* **[React Version](https://github.com/SalmaTech-03/Fullstack/blob/main/speech-to-text-react/README.md)** — A component-based version of this project built using React.
 
 ```
 
