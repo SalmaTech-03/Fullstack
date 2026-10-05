@@ -1,636 +1,387 @@
-Speech to Text --- React, Supabase & TanStack Query
+# React Speech to Text Workspace
 
-<p align="center">
-
-<img src="https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=white" alt="React"/>{=html}
-<img src="https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white" alt="Vite"/>{=html}
-<img src="https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black" alt="JavaScript"/>{=html}
-<img src="https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white" alt="HTML5"/>{=html}
-<img src="https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white" alt="CSS3"/>{=html}
-<img src="https://img.shields.io/badge/Supabase-3ECF8E?logo=supabase&logoColor=white" alt="Supabase"/>{=html}
-<img src="https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&logoColor=white" alt="PostgreSQL"/>{=html}
-<img src="https://img.shields.io/badge/TanStack_Query-FF4154?logo=reactquery&logoColor=white" alt="TanStack Query"/>{=html}
-<img src="https://img.shields.io/badge/Web_Speech_API-4285F4?logo=googlechrome&logoColor=white" alt="Web Speech API"/>{=html}
-<img src="https://img.shields.io/badge/localStorage-Browser_API-6B7280" alt="localStorage"/>{=html}
-
+<p align="left">
+  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original.svg" alt="React" width="40" height="40"/>
+  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/vitejs/vitejs-original.svg" alt="Vite" width="40" height="40"/>
+  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="JavaScript" width="40" height="40"/>
+  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/supabase/supabase-original.svg" alt="Supabase" width="40" height="40"/>
+  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/postgresql/postgresql-original.svg" alt="PostgreSQL" width="40" height="40"/>
+  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/html5/html5-original.svg" alt="HTML5" width="40" height="40"/>
+  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/css3/css3-original.svg" alt="CSS3" width="40" height="40"/>
+  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/npm/npm-original-wordmark.svg" alt="npm" width="40" height="40"/>
 </p>
 
-<p align="center">
 
-A browser-based speech-to-text application built from scratch and
-progressively evolved into a structured React application with
-authentication, cloud history, PostgreSQL persistence, Row Level
-Security, server-state caching, persistent cache, offline-aware reads,
-request control, and explicit security boundaries.
+A production-oriented, browser-based speech-to-text application built with **React**, **Supabase**, and **TanStack Query**.
 
-</p>
+The project demonstrates how to build a reliable client application around a browser-native speech API while separating UI state, server state, authentication, persistence, database access, caching, and error handling into explicit architectural boundaries.
 
-Why this project exists
+---
 
-A speech-to-text demo is easy to build. The browser can provide speech
-recognition and React can display the resulting text. The engineering
-problem begins when the application needs to behave like a real product.
+## Architectural Highlights
 
-Once users can sign in and save transcripts, the application has to
-answer practical questions: where history lives, how users are isolated,
-what happens after refresh, what happens offline, which state belongs in
-React, which state belongs in server-state management, how backend
-contracts are isolated from UI code, how repeated requests are
-controlled, and what happens to cached data after logout.
+| Core Pillar | Operational Implementation |
+| --- | --- |
+| **State Categorization** | Strict separation of transient UI state (React) from remote server state (TanStack Query) |
+| **Data Isolation** | Multi-tenant user session security enforced at the PostgreSQL database level via Row Level Security (RLS) |
+| **Cache Strategy** | Two-tier query caching (Memory + `localStorage`) with automatic cache purging on user logout |
+| **Integration Boundary** | Data and error adapters normalizing `snake_case` backend schemas and raw network status codes |
 
-This project was built by starting with the smallest useful
-speech-recognition implementation and introducing architecture only when
-a real requirement justified it. The result is a practical application
-rather than a collection of technologies added for appearance.
+---
 
-What the application does
+## Technical Stack
 
-The application allows an authenticated user to start browser speech
-recognition, see the transcript, stop or clear recognition, see a word
-count, save sessions to Supabase, search/load/delete/clear history,
-register, sign in, sign out, recover a forgotten password, and restore
-authentication state after refresh.
+```
+[ Frontend Layer ] ────── React | Vite | CSS3 | JavaScript (JSX)
+[ Hardware Interface ] ── Web Speech API
+[ State & Caching ] ───── TanStack Query | Persistent localStorage Cache
+[ Backend Services ] ──── Supabase Auth | Supabase PostgreSQL | Row Level Security
+[ Tooling ] ───────────── npm
 
-It also persists the current transcript locally, persists TanStack Query
-server-state cache, displays previously fetched history while offline,
-prevents concurrent duplicate mutations, and normalizes backend data and
-errors before they reach the UI.
+```
 
-The application does not claim fully offline speech recognition. The
-Web Speech API may depend on browser/vendor recognition services, so
-recognition can fail offline even when cached application data remains
-available.
+| Layer | Technology | Domain Role |
+| --- | --- | --- |
+| **Frontend UI** | React | Component-driven presentation layer |
+| **Build Engine** | Vite | Module bundling and HMR development server |
+| **Speech Capture** | Web Speech API | Browser-native speech recognition engine |
+| **Identity Management** | Supabase Auth | Session tokens, registration, and credential recovery |
+| **Database Engine** | Supabase PostgreSQL | Persistent record storage for user speech sessions |
+| **Access Control** | PostgreSQL RLS | Row Level Security policies for user data isolation |
+| **Server State** | TanStack Query | Query caching, invalidation, loading states, and mutations |
+| **Offline Persistence** | `localStorage` | Rehydration target for TanStack Query server cache |
 
-Screenshots
+---
 
-The screenshots below are part of the project repository and document the actual running application and its Supabase backend.
+## System Overview
 
-Authenticated application
+A speech-to-text proof-of-concept is straightforward to construct using standard browser APIs. Moving from a demo to a structured product requires solving fundamental software architecture challenges:
 
+```
+                  ┌──────────────────────────────────────────────┐
+                  │          React Speech Application            │
+                  └──────────────────────┬───────────────────────┘
+                                         │
+        ┌────────────────────────────────┼────────────────────────────────┐
+        │                                │                                │
+        ▼                                ▼                                ▼
+┌─────────────────────────┐  ┌─────────────────────────┐  ┌─────────────────────────┐
+│     Data Isolation      │  │   State Categorization  │  │     Cache Lifecycle     │
+│ Enforce user boundary   │  │ Split local React UI   │  │ Persist to localStore   │
+│ in PostgreSQL via RLS   │  │ from TanStack Query     │  │ & flush on sign-out     │
+└─────────────────────────┘  └─────────────────────────┘  └─────────────────────────┘
+        │                                │                                │
+        └────────────────────────────────┼────────────────────────────────┘
+                                         │
+                                         ▼
+                             ┌─────────────────────────┐
+                             │  Integration & Safety   │
+                             │ Adapter payload transforms│
+                             │ & mutation flight guards │
+                             └─────────────────────────┘
 
+```
 
-This view shows the authenticated speech-to-text workspace, signed-in user, speech controls, transcript area, word count, and cloud-backed history.
+> **Deliberate Design Policy:** This project introduces production-oriented architecture where it directly solves an operational problem, avoiding unneeded infrastructure complexity like microservices or custom proxy servers.
 
-Login page
+---
 
+## Core Capabilities
 
+* **Speech Engine Management:** Lifecycle control covering speech capture start, manual stoppage, transcript clearing, continuous output rendering, and word metrics.
+* **Authentication Workflows:** Email/password sign-in, user registration, state persistence across page reloads, sign-out, and credential recovery.
+* **Cloud Session Sync:** Persistent storage of user transcripts in Supabase PostgreSQL with real-time filtering, individual deletion, and bulk clearing.
+* **Resilient Offline Reads:** Persistent server-state caching powered by TanStack Query and `localStorage` for offline browsing of previously fetched history.
+* **Mutation Concurrency Guards:** Guard mechanisms on transcript save actions preventing duplicate requests while network calls are in flight.
+* **Adapter Normalization:** Transformation layers mapping database conventions (`snake_case`) into frontend models (`camelCase`) and standardizing error responses.
 
-This view shows the authentication entry point, including sign-in, registration, and password recovery navigation.
+> **Offline Boundary Note:** The application supports reading previously cached transcript history while offline. Speech recognition relies on browser driver services, which may still require network connectivity.
 
-Supabase database
+---
 
+## Application Previews
 
+### Authenticated Workspace
 
-This view shows the public.speech_sessions table with the UUID session ID, authenticated user_id, transcript text, and created_at timestamp. It demonstrates that saved sessions are persisted in PostgreSQL rather than existing only in frontend state.
+Workspace interface displaying real-time transcription, speech controls, word metrics, network indicators, and cloud-synced transcript history.
 
-The image paths intentionally use repository-relative paths. The absolute Windows paths on your computer should not be placed in the README, because they will not work for someone cloning the repository.
+---
 
-Architecture
+### Authentication Interface
 
-The application is separated by responsibility rather than by simply
-creating more files:
+Entry portal supporting sign-in, account creation, password recovery, and password update operations.
 
-                         Browser
-                            │
-                            ▼
-                     React Application
-                            │
-          ┌─────────────────┼──────────────────┐
-          │                 │                  │
-          ▼                 ▼                  ▼
-     Components          Custom Hooks       UI State
-          │                 │
-          │                 ├── Speech Recognition
-          │                 ├── Authentication
-          │                 ├── Network Status
-          │                 └── Speech History
-          │
-          ▼
-      Service Layer
-          │
-          ├── Auth Service
-          ├── Speech History Service
-          └── Supabase Client
-          │
-          ▼
-       Supabase
-     ┌───────────────┐
-     │ Authentication│
-     │ PostgreSQL    │
-     │ RLS           │
-     └───────────────┘
-          │
-          ▼
-    TanStack Query
-     ┌──────────────┐
-     │ Memory Cache │
-     │ Persistent   │
-     │ Cache        │
-     └──────────────┘
+---
 
-The key rule is that UI components do not need to know how Supabase
-works. A component can call addSession(transcript) without knowing how
-the database insert is implemented.
+### Supabase PostgreSQL Database
 
-Components
+Public database schema showing stored speech sessions with explicit owner mapping via `user_id`.
 
+---
+
+## Architecture & System Design
+
+```
+                     ┌───────────────────────────────────┐
+                     │            Browser                │
+                     └─────────────────┬─────────────────┘
+                                       │
+                                       ▼
+                     ┌───────────────────────────────────┐
+                     │         React Application         │
+                     └─────────────────┬─────────────────┘
+                                       │
+      ┌────────────────────────────────┼────────────────────────────────┐
+      │                                │                                │
+      ▼                                ▼                                ▼
+┌───────────┐                    ┌───────────┐                    ┌───────────┐
+│Components │                    │  Hooks    │                    │ UI State  │
+└─────┬─────┘                    └─────┬─────┘                    └───────────┘
+      │                                │
+      │                                ├── Speech Recognition
+      │                                ├── Authentication
+      │                                ├── Network Status
+      │                                └── Speech History
+      │                                │
+      └────────────────────────────────┼────────────────────────────────┐
+                                       │                                │
+                                       ▼                                ▼
+                         ┌───────────────────────────┐    ┌───────────────────────────┐
+                         │       Service Layer       │    │      Adapter Layer        │
+                         │                           │    │                           │
+                         │  • Auth Service           │    │  • Speech Adapter         │
+                         │  • Speech History Service │    │  • Speech Error Adapter   │
+                         │  • Supabase Client        │    │  • API Error Adapter      │
+                         └─────────────┬─────────────┘    └───────────────────────────┘
+                                       │
+                                       ▼
+                         ┌───────────────────────────┐
+                         │         Supabase          │
+                         │                           │
+                         │  • Auth Engine            │
+                         │  • PostgreSQL DB          │
+                         │  • Row Level Security     │
+                         └─────────────┬─────────────┘
+                                       │
+                                       ▼
+                         ┌───────────────────────────┐
+                         │      TanStack Query       │
+                         │                           │
+                         │  • Memory Cache           │
+                         │  • Persistent Storage     │
+                         └───────────────────────────┘
+
+```
+
+The system enforces a strict **unidirectional data flow**: UI components consume hooks and service abstraction layers without directly maintaining Supabase query definitions or raw database schemas.
+
+---
+
+## Component Architecture
+
+```
 src/components/
-├── Header.jsx
-├── StatusIndicator.jsx
-├── Transcript.jsx
-├── SpeechControls.jsx
-├── WordCount.jsx
-├── History.jsx
-├── LoginForm.jsx
-├── RegisterForm.jsx
-├── ForgotPasswordForm.jsx
-└── UpdatePasswordForm.jsx
+├── Header.jsx ────────────── Application header & user identity banner
+├── StatusIndicator.jsx ───── Live network status readout
+├── Transcript.jsx ────────── Active transcript text area
+├── SpeechControls.jsx ────── Speech recognition action triggers
+├── WordCount.jsx ─────────── Word and character count statistics
+├── History.jsx ───────────── Saved cloud session list and search filter
+├── LoginForm.jsx ─────────── Sign-in credential form
+├── RegisterForm.jsx ──────── Account registration form
+├── ForgotPasswordForm.jsx ── Password recovery request form
+└── UpdatePasswordForm.jsx ── New password submission form
 
-Transcript renders transcript content. SpeechControls exposes
-recognition actions. History presents and searches saved sessions.
-Authentication forms own their respective authentication interactions.
+```
 
-The components intentionally do not contain Supabase queries.
+---
 
-Custom hooks
+## Custom Hooks & Service Layers
 
-src/hooks/
-├── useSpeechRecognition.js
-├── useNetworkStatus.js
-├── useSpeechHistory.js
-└── useAuth.js
+```
+                                 ┌───────────────────────┐
+                                 │   Presentation Layer  │
+                                 └───────────┬───────────┘
+                                             │
+      ┌──────────────────────────────┬───────┴──────────────────────┬──────────────────────────────┐
+      │                              │                              │                              │
+      ▼                              ▼                              ▼                              ▼
+┌───────────┐                  ┌───────────┐                  ┌───────────┐                  ┌───────────┐
+│useSpeech  │                  │  useAuth  │                  │useSpeech  │                  │useNetwork │
+│Recognition│                  └─────┬─────┘                  │ History   │                  │  Status   │
+└─────┬─────┘                        │                        └─────┬─────┘                  └─────┬─────┘
+      │                              │                              │                              │
+      ▼                              ▼                              ▼                              ▼
+Browser Web Speech             authService.js                TanStack Query &               window.addEventListener
+API Instance                   (Supabase Auth)               speechHistoryService           ('online' / 'offline')
 
-useSpeechRecognition
+```
 
-Owns the browser recognition lifecycle and exposes start, stop, clear,
-and load operations. Browser API details stay inside the hook instead of
-leaking into presentation components.
+### Module Responsibilities
 
-useAuth
+* **`useSpeechRecognition`:** Encapsulates the Web Speech API instance, exposing `start`, `stop`, `clear`, and `load` operations.
+* **`useAuth`:** Exposes session state, active user objects, authentication status, and auth actions (`login`, `register`, `logout`, resets).
+* **`useSpeechHistory`:** Interfaces with TanStack Query and `speechHistoryService`, managing query keys, invalidation, and data mutations.
+* **`useNetworkStatus`:** Subscribes to browser `online` and `offline` events to expose network connectivity state.
 
-Owns authentication state and actions such as login, register,
-logout, sendPasswordReset, and changePassword. It also tracks
-session, user, loading, errors, and recovery mode.
+---
 
-useSpeechHistory
+## Data Transformation Pipeline
 
-Connects React to TanStack Query and the speech-history service. It owns
-fetching, mutations, loading state, mutation state, invalidation,
-user-scoped query keys, and offline-first reads.
+The adapter layer decouples backend database field naming conventions (`snake_case`) from frontend application models (`camelCase`):
 
-useNetworkStatus
-
-Tracks browser online/offline events and exposes isOnline to the UI.
-
-Service layer
-
-src/services/
-├── supabaseClient.js
-├── authService.js
-└── speechHistoryService.js
-
-supabaseClient.js creates the browser Supabase client from Vite
-environment variables.
-
-authService.js provides authentication operations including sign-up,
-sign-in, sign-out, session lookup, auth-state subscription, password
-reset, and password update.
-
-speechHistoryService.js owns fetchSessions, createSession,
-deleteSession, and clearSessions for public.speech_sessions.
-
-The service layer also validates input before persistence. Empty
-transcripts are rejected rather than becoming meaningless database
-records.
-
-Adapter layer
-
-src/adapters/
-├── speechAdapter.js
-├── speechErrorAdapter.js
-└── apiErrorAdapter.js
-
-The adapter layer isolates external contracts from the application
-model.
-
-Supabase/database fields such as:
-
-user_id
-created_at
-
-are normalized into application fields:
-
-userId
-createdAt
-
-For example:
-
+```javascript
+// Normalizes database record conventions into application models
 function normalizeSpeechSession(session) {
-    return {
-        id: session.id,
-        userId: session.user_id,
-        text: session.text,
-        createdAt: session.created_at,
-    };
+  return {
+    id: session.id,
+    userId: session.user_id,
+    text: session.text,
+    createdAt: session.created_at,
+  };
 }
 
-The same boundary is used for speech errors and API errors. If an
-external contract changes, the integration boundary is where the change
-should be absorbed rather than propagating backend-specific names
-throughout the UI.
-
-End-to-end data flow
-
-A save operation follows this path:
-
-User speaks
-    │
-    ▼
-Web Speech API
-    │
-    ▼
-useSpeechRecognition()
-    │
-    ▼
-Transcript state
-    │
-    ▼
-Save Transcript
-    │
-    ▼
-useSpeechHistory()
-    │
-    ▼
-speechHistoryService
-    │
-    ▼
-Supabase
-    │
-    ▼
-PostgreSQL
-    │
-    ▼
-speech_sessions
-    │
-    ▼
-TanStack Query invalidation
-    │
-    ▼
-Fresh history
-    │
-    ▼
-History component
-
-Database design
-
-The persistent table is:
-
-public.speech_sessions
-
-Column         Type          Purpose
-
-id           UUID          Unique session identifier
-user_id      UUID          Authenticated owner
-text         text          Saved transcript
-created_at   timestamptz   Creation timestamp
-
-Conceptually:
-
-auth.users
-    │
-    │ user_id
-    ▼
-speech_sessions
-
-A user can own multiple sessions.
-
-Row Level Security
-
-Row Level Security is enabled on speech_sessions. The authorization
-model is based on the equivalent of:
-
-auth.uid() = user_id
-
-The database, rather than the React application, is the final
-authorization boundary.
-
-User A
-  │
-  ├── Read A's sessions      ✓
-  ├── Create A's sessions    ✓
-  └── Delete A's sessions    ✓
-
-User B
-  │
-  ├── Read B's sessions      ✓
-  ├── Create B's sessions    ✓
-  └── Delete B's sessions    ✓
-
-User A → B's sessions        ✗
-User B → A's sessions        ✗
-
-Frontend checks are useful for user experience, but they are not
-sufficient authorization. RLS is the database-level control.
-
-Authentication architecture
-
-Normal authentication:
+```
+
+### End-to-End Save Pipeline
 
-Register
-   ↓
-Email confirmation
-   ↓
-Sign in
-   ↓
-Authenticated application
+```
+[ User Speech ]
+       │
+       ▼
+[ Web Speech API ]
+       │
+       ▼
+[ useSpeechRecognition() Hook ]
+       │
+       ▼
+[ Transcript UI State ]
+       │
+       ▼
+[ Save Action Trigger ] ──► [ useSpeechHistory() ] ──► [ speechHistoryService ]
+                                                               │
+                                                               ▼
+                                                     [ Supabase Client ]
+                                                               │
+                                                               ▼
+                                                    [ Supabase PostgreSQL ]
+                                                               │
+                                                               ▼
+                                                [ TanStack Query Invalidation ]
+                                                               │
+                                                               ▼
+                                                   [ Updated History UI ]
 
-Password recovery:
+```
 
-Forgot password
-      ↓
-Reset email
-      ↓
-Recovery session
-      ↓
-New password
-      ↓
-Normal authentication
+---
 
-The application listens for authentication state changes so React stays
-synchronized with the provider.
+## Database Schema & Authorization Model
 
-Passwords are not stored in localStorage or in speech_sessions.
+### Table Definition: `public.speech_sessions`
 
-Client state vs server state
+| Column | Data Type | Constraints / Description |
+| --- | --- | --- |
+| `id` | `UUID` | Primary Key, `gen_random_uuid()` |
+| `user_id` | `UUID` | Foreign Key referencing `auth.users.id` |
+| `text` | `TEXT` | Saved speech transcript content |
+| `created_at` | `TIMESTAMPTZ` | Record creation timestamp |
 
-A deliberate distinction is made between local application state and
-remote server state.
+### Row Level Security (RLS)
 
-React state includes values such as:
+Database isolation is strictly enforced via PostgreSQL Row Level Security policies. Authenticated queries automatically evaluate against the active user's session token.
 
-transcript
-isListening
-authMode
-isOnline
+```
+Requesting User            Database RLS Engine             Data Access Result
+───────────────────        ───────────────────────         ────────────────────────
+User A (Session Token) ──►  WHERE auth.uid() = user_id ──►  Access granted to User A records only
+User B (Session Token) ──►  WHERE auth.uid() = user_id ──►  Access granted to User B records only
 
-TanStack Query owns remote state such as:
+```
 
-speech history
-history loading
-save/delete/clear mutations
-server cache
+---
 
-This prevents a remote database from being treated as if it were merely
-another local React variable.
+## State & Cache Management
 
-TanStack Query and caching
+### State Classification Matrix
 
-Speech history is server state, so TanStack Query handles it.
+```
+┌─────────────────────────────────────────┬─────────────────────────────────────────┐
+│   Local Client State (React Hooks)      │   Remote Server State (TanStack Query)  │
+├─────────────────────────────────────────┼─────────────────────────────────────────┤
+│ • Active transcript string              │ • Persisted speech history records      │
+│ • Speech engine listening status        │ • Query fetch & loading states          │
+│ • Auth form toggles & view states       │ • Save, Delete, and Clear mutations     │
+│ • Browser network online status         │ • Persistent local cache hydration      │
+└─────────────────────────────────────────┴─────────────────────────────────────────┘
 
-The query is scoped by authenticated user:
+```
 
-const queryKey = [
-    "speech-sessions",
-    userId,
-];
+### Query Key Scoping & Two-Tier Cache
 
-After successful create, delete, or clear operations, the relevant query
-is invalidated so fresh server data can be obtained.
+Queries are explicitly bound to the authenticated user's ID:
 
-Persistent query cache
+```javascript
+const queryKey = ["speech-sessions", userId];
 
-The project also persists TanStack Query cache in browser storage:
+```
 
-                 Supabase
-                    │
-                    ▼
-              TanStack Query
-               /          \
-              /            \
-       Memory Cache    Persistent Cache
-                           │
-                       localStorage
+Data flows through a two-tier caching architecture:
 
-This means previously fetched history can be restored after refresh
-instead of always starting from an empty in-memory cache.
+```
+                        Supabase PostgreSQL
+                                 │
+                                 ▼
+                       TanStack Query Engine
+                      /                     \
+                     ▼                       ▼
+            In-Memory Cache          Persistent Storage
+          (Active Session Data)        (localStorage)
 
-The persistent cache is still a cache. Supabase remains the source of
-truth.
+```
 
-Offline behavior
+### Multi-Tenant Cache Flushing
 
-The project distinguishes offline reads from offline writes.
+To eliminate cross-user cache contamination on shared hardware, logging out explicitly purges the query cache:
 
-Previously fetched history can remain visible when the browser is
-offline. New cloud writes still require connectivity.
-
-Operation                     Offline
-
-View cached history           Supported
-View current transcript       Supported
-Read persisted browser data   Supported
-Save new cloud session        Requires network
-Delete cloud session          Requires network
-Clear cloud history           Requires network
-Browser speech recognition    May require network
-
-A full offline-write queue has intentionally not been implemented
-because it would introduce mutation persistence, reconciliation, retry,
-conflict handling, and synchronization concerns that are not currently
-required.
-
-Request control
-
-Remote mutations are protected against rapid repeated actions.
-
-Save Transcript
-      ↓
-isSaving = true
-      ↓
-button disabled
-      ↓
-request completes
-      ↓
-button enabled
-
-Delete and Clear History follow the same pattern.
-
-The UI also communicates the active request through Saving...,
-Deleting..., and Clearing... states.
-
-This is deliberately simpler than building a general-purpose request
-queue. A queue would be justified later for bulk uploads, external AI
-processing, or another workload with genuine queueing/rate-limit
-requirements.
-
-Retry strategy
-
-Reads and writes are treated differently.
-
-Queries use limited retries with exponential backoff for transient
-failures.
-
-Mutations do not automatically retry. A write that was processed by the
-server but whose response was lost can be dangerous to retry blindly
-because the operation might not be idempotent.
-
-The current policy is therefore:
-
-Queries
-→ limited retry + backoff
-
-Mutations
-→ no automatic retry
-→ explicit pending state
-→ user-controlled retry
-
-Error normalization
-
-Backend errors pass through:
-
-src/adapters/apiErrorAdapter.js
-
-and are converted into a predictable shape:
-
-{
-    message,
-    code,
-    status
-}
-
-Common status categories can be presented consistently:
-
-401 / 403 → authentication or permission problem
-429       → too many requests
-5xx       → temporary server problem
-
-This keeps backend-specific error formats out of presentation
-components.
-
-Security model
-
-Security is layered.
-
-Environment configuration
-
-Only browser-safe configuration belongs in VITE_* variables. Never
-expose a Supabase secret/service-role key in the frontend bundle.
-
-Authentication
-
-Supabase manages authentication rather than the application storing
-passwords.
-
-Authorization
-
-RLS protects database rows.
-
-Cache isolation
-
-History queries are user-scoped and the React Query cache is cleared on
-logout.
-
-XSS
-
-Transcript and history text are rendered as normal React text. The
-application does not use dangerouslySetInnerHTML for user-controlled
-content.
-
-Input validation
-
-Empty transcripts are rejected before persistence, and the service layer
-can reject unreasonable transcript sizes.
-
-Logout and cache isolation
-
-Logout also clears server-state cache:
-
+```javascript
 const handleLogout = async () => {
-    try {
-        await logout();
-    } finally {
-        queryClient.clear();
-    }
+  try {
+    await logout();
+  } finally {
+    queryClient.clear(); // Purges all query keys from memory
+  }
 };
 
-The intended flow is:
+```
 
-User A
-  ↓
-Authenticated
-  ↓
-History cached
-  ↓
-Logout
-  ↓
-Supabase session ends
-  ↓
-TanStack cache cleared
-  ↓
-Login screen
+---
 
-This protects the client-side cache boundary in addition to
-database-level RLS.
+## Resilience & Retry Policies
 
-Why there is no Redux
+| Operation | Offline Behavior | Retry Strategy |
+| --- | --- | --- |
+| **Read History** | Supported via persistent `localStorage` cache | `retry: 2` (up to three total attempts for retryable queries) |
+| **Speech Capture** | Dependent on browser recognition driver | N/A |
+| **Save Transcript** | Network required; failed requests surface an error | **No automatic retry** (prevents duplicate database records) |
+| **Delete / Clear** | Network required; failed requests surface an error | **No automatic retry** |
 
-Redux is technically possible, but it is not necessary for the current
-state model.
+### Concurrency Guards
 
-The application already has a natural split:
+Save operations track `isSaving` state to disable action controls during active network flights, preventing rapid duplicate submissions.
 
-Local UI state
-→ React hooks
+---
 
-Remote server state
-→ TanStack Query
+## Project Structure
 
-Adding Redux only to increase the technology count would make the
-application harder to explain without solving a current problem.
-
-Why there is no custom backend
-
-The current architecture is:
-
-React
-  ↓
-Supabase client
-  ↓
-Supabase Auth + PostgreSQL + RLS
-
-A custom backend becomes valuable when server-only secrets, proprietary
-business logic, custom authorization, background jobs, server-side AI
-processing, or server-controlled rate limiting are required.
-
-For the current application, adding another backend would increase
-deployment and maintenance complexity without providing a necessary
-capability.
-
-Why Web Speech API
-
-The project focuses on application engineering rather than building a
-speech-recognition model.
-
-The Web Speech API provides speech recognition without introducing a
-separate transcription backend, API credential, per-request
-transcription service, or processing infrastructure.
-
-The tradeoff is that browser speech recognition is not fully controlled
-by the application. Browser support, permissions, recognition behavior,
-and network dependency can vary.
-
-Project structure
-
+```
 speech-to-text-react/
-│
 ├── public/
-│
 ├── src/
 │   ├── adapters/
 │   │   ├── apiErrorAdapter.js
 │   │   ├── speechAdapter.js
 │   │   └── speechErrorAdapter.js
-│   │
 │   ├── components/
 │   │   ├── Header.jsx
 │   │   ├── StatusIndicator.jsx
@@ -642,287 +393,99 @@ speech-to-text-react/
 │   │   ├── RegisterForm.jsx
 │   │   ├── ForgotPasswordForm.jsx
 │   │   └── UpdatePasswordForm.jsx
-│   │
 │   ├── hooks/
 │   │   ├── useSpeechRecognition.js
 │   │   ├── useNetworkStatus.js
 │   │   ├── useSpeechHistory.js
 │   │   └── useAuth.js
-│   │
 │   ├── query/
 │   │   ├── queryClient.js
 │   │   ├── queryConfig.js
 │   │   └── queryPersister.js
-│   │
 │   ├── services/
 │   │   ├── supabaseClient.js
 │   │   ├── authService.js
 │   │   └── speechHistoryService.js
-│   │
 │   ├── storage/
 │   │   └── transcriptStorage.js
-│   │
 │   ├── App.jsx
 │   ├── App.css
 │   ├── index.css
 │   └── main.jsx
-│
 ├── .env
 ├── .gitignore
 ├── package.json
 └── README.md
 
-The folders answer different engineering questions:
+```
 
-components → What does the user see?
-hooks      → How does the application behave?
-services   → How do we communicate externally?
-adapters   → How do external contracts become application data?
-query      → How is remote server state managed?
-storage    → What browser state is persisted?
+---
 
-Technology stack
+## Local Development & Setup
 
-Technology                   Role
+### Prerequisites
 
-React                        Component-based UI
-Vite                         Development server and build tooling
-JavaScript                   Application language
-HTML5                        Document structure
-CSS3                         Styling and responsive layout
-Web Speech API               Browser speech recognition
-Supabase                     Authentication and backend platform
-PostgreSQL                   Persistent speech-session storage
-Row Level Security           Database authorization
-TanStack Query               Server-state management and caching
-TanStack Query persistence   Persistent server-state cache
-localStorage                 Browser persistence
-npm                          Dependency management
+* **Node.js:** `v18.0.0` or higher
+* **Package Manager:** `npm`
+* **Browser:** Modern browser supporting Web Speech API (Chrome, Edge, Safari)
+* **Supabase Instance:** Active Supabase project with Auth and PostgreSQL enabled
 
-Local development
+### Execution Steps
 
-Requirements
-
-Node.js
-
-npm
-
-A modern browser with Web Speech API support
-
-A Supabase project
-
-Installation
-
-git clone <your-repository-url>
+1. **Clone Repository:**
+```bash
+git clone <repository-url>
 cd speech-to-text-react
+
+```
+
+
+2. **Install Dependencies:**
+```bash
 npm install
 
-Environment
+```
 
-Create .env in the project root:
 
+3. **Configure Environment Variables:**
+Create a `.env` file in the project root:
+```env
 VITE_SUPABASE_URL=your_supabase_project_url
-VITE_SUPABASE_KEY=your_supabase_publishable_or_anon_key
+VITE_SUPABASE_KEY=your_supabase_anon_key
 
-Never commit .env.
+```
 
-Run
 
+4. **Launch Development Engine:**
+```bash
 npm run dev
 
-Vite will provide a local development URL such as
-http://localhost:5173/.
+```
 
-Supabase setup
 
-Create:
+Navigate to `http://localhost:5173` in your browser.
 
-public.speech_sessions
+---
 
-with:
+## Architectural Tradeoffs & Design Decisions
 
-id          uuid
-user_id     uuid
-text        text
-created_at  timestamptz
+* **`localStorage` vs. `IndexedDB`:** `localStorage` is used for persistent cache storage due to the modest size of textual transcript records. `IndexedDB` would become preferable if storing raw audio BLOBs.
+* **Direct Supabase Integration vs. Custom Backend:** Interfacing with Supabase directly through custom services and database RLS satisfies all multi-tenant authorization requirements without introducing server infrastructure overhead.
+* **TanStack Query vs. Global UI State:** Server state is cleanly isolated from local React component state, leveraging TanStack Query for cache invalidations, rehydration, and fetch lifecycle states.
+* **Explicit Mutation Retries vs. Offline Write Queuing:** Automatic background syncing for mutations was intentionally omitted. Bypassing an offline write queue prevents silent synchronization conflicts, ambiguous mutation ordering, or accidental duplicate database inserts.
 
-Enable Row Level Security and create policies that restrict records to
-the authenticated owner using the equivalent of:
+---
 
-auth.uid() = user_id
+## Current Status & Feature Matrix
 
-Production build
+* [x] Web Speech API Engine Integration
+* [x] Custom Hooks Architecture Layer
+* [x] Supabase Auth & Session Persistence
+* [x] PostgreSQL Row Level Security Isolation
+* [x] TanStack Query Server State Management
+* [x] Persistent Offline Read Access (`localStorage`)
+* [x] Save Mutation Concurrency Guard
+* [x] Centralized Data & Error Adapters
+* [x] User-Scoped Cache Clearing on Logout
+* [x] Responsive CSS Interface
 
-npm run build
-npm run preview
-
-Before deployment, verify environment variables, authentication redirect
-URLs, RLS, target-browser speech support, and multi-user isolation.
-
-Performance considerations
-
-The application reduces unnecessary server traffic through TanStack
-Query caching, persistent cache, user-scoped query keys, mutation
-invalidation, disabled window-focus refetching, bounded query retries,
-no automatic mutation retries, and pending-mutation guards.
-
-No formal load-test results are claimed. Performance numbers should only
-be documented after actual measurements.
-
-Failure scenarios considered
-
-The project explicitly considers microphone permission errors, missing
-microphones, no-speech events, recognition/network failures, Supabase
-failures, repeated Save/Delete/Clear actions, logout, offline reads, and
-multi-user data isolation.
-
-The goal is not to eliminate every failure. The goal is to make failure
-behavior explicit and predictable.
-
-Engineering tradeoffs
-
-localStorage instead of IndexedDB
-
-Current data volume is small enough for localStorage. IndexedDB becomes
-more appropriate if the application begins storing large amounts of
-offline data, audio, or metadata.
-
-Supabase instead of a custom backend
-
-Supabase provides authentication, PostgreSQL, RLS, and a browser SDK
-without requiring another application server.
-
-TanStack Query instead of Redux for history
-
-History is remote server state, so TanStack Query is designed for the
-problem.
-
-Browser speech recognition instead of an STT backend
-
-This avoids transcription API costs, credentials, backend processing,
-and an additional network dependency.
-
-No offline mutation queue
-
-A synchronization queue would be justified for a genuinely offline-first
-product. It is intentionally absent here because the current
-requirements do not need it.
-
-No microservices
-
-There is no current business reason to split this application into
-multiple backend services.
-
-Limitations
-
-Speech recognition depends on browser support and the Web Speech API
-implementation.
-
-Offline cached history is supported, but offline speech recognition
-may still fail.
-
-New cloud sessions cannot currently be queued for later
-synchronization.
-
-The frontend communicates directly with Supabase rather than through
-a custom backend.
-
-A dedicated automated test suite still needs to be added before
-claiming comprehensive production verification.
-
-There is no dedicated production logging, tracing, or monitoring
-layer yet.
-
-Project status
-
-React UI                         ✓
-Web Speech API                  ✓
-Component architecture          ✓
-Custom hooks                    ✓
-Service layer                   ✓
-Data adapters                   ✓
-Authentication                  ✓
-Password recovery               ✓
-Supabase PostgreSQL             ✓
-Row Level Security              ✓
-Cloud speech history            ✓
-TanStack Query                  ✓
-Persistent query cache          ✓
-Offline cached reads            ✓
-Network awareness               ✓
-Mutation duplicate protection   ✓
-Centralized API errors          ✓
-User-scoped cache               ✓
-Logout cache clearing           ✓
-Responsive UI                   ✓
-
-Development philosophy
-
-Architecture should be driven by requirements, not by the number of
-technologies in the stack.
-
-TanStack Query exists because history is server state. RLS exists
-because multiple users share a database. Persistent caching exists
-because cached data should survive refreshes. Mutation guards exist
-because repeated actions should not create concurrent requests. Adapters
-exist because external contracts should not leak into UI code.
-
-The project deliberately avoids infrastructure such as Redis, Kafka,
-message queues, microservices, or a custom backend when there is no
-current requirement for them.
-
-Final architecture
-
-                         ┌──────────────────────┐
-                         │      React UI        │
-                         │                      │
-                         │ Components           │
-                         │ Auth Forms           │
-                         │ Transcript           │
-                         │ History              │
-                         └──────────┬───────────┘
-                                    │
-                                    ▼
-                         ┌──────────────────────┐
-                         │    Custom Hooks      │
-                         │                      │
-                         │ useAuth              │
-                         │ useSpeechRecognition │
-                         │ useSpeechHistory     │
-                         │ useNetworkStatus     │
-                         └──────────┬───────────┘
-                                    │
-                    ┌───────────────┴────────────────┐
-                    │                                │
-                    ▼                                ▼
-             ┌──────────────┐                ┌──────────────┐
-             │   Adapters   │                │   TanStack   │
-             │              │                │    Query     │
-             │ Data         │                │              │
-             │ Errors       │                │ Cache        │
-             │ Speech       │                │ Mutations    │
-             └──────┬───────┘                │ Persistence  │
-                    │                        └──────┬───────┘
-                    ▼                               │
-             ┌──────────────┐                       │
-             │   Services   │◄──────────────────────┘
-             │              │
-             │ Auth         │
-             │ Speech DB    │
-             │ Supabase     │
-             └──────┬───────┘
-                    │
-                    ▼
-             ┌──────────────────┐
-             │     Supabase     │
-             │                  │
-             │ Authentication  │
-             │ PostgreSQL       │
-             │ RLS              │
-             └──────────────────┘
-
-The architecture is intentionally practical: enough separation to keep
-the application maintainable, enough backend security to support
-multiple users, and enough caching and request control to behave like a
-real application without introducing infrastructure the current problem
-does not need.
