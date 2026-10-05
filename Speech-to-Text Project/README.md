@@ -8,7 +8,7 @@
   <img src="https://img.shields.io/badge/Web%20Speech%20API-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Web Speech API">
 </p>
 
-C:\Users\syedm\OneDrive\Documents\HTML_CSS_JS\Speech-to-Text Project\project.png
+<img src="https://github.com/SalmaTech-03/Fullstack/blob/main/Speech-to-Text%20Project/project.png">
 
 A browser-based speech-to-text application built with **HTML, CSS, and vanilla JavaScript**.
 
