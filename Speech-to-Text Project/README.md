@@ -1,5 +1,5 @@
 
-# Speech to Text
+# Speech to Text Web Application
 
 <p align="center">
   <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5">
@@ -8,280 +8,98 @@
   <img src="https://img.shields.io/badge/Web%20Speech%20API-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Web Speech API">
 </p>
 
-<img src="https://github.com/SalmaTech-03/Fullstack/blob/main/Speech-to-Text%20Project/project.png">
+A lightweight, real-time speech-to-text web application built using standard HTML, CSS, and vanilla JavaScript. The application leverages the browser's native Web Speech API to convert spoken voice input into text instantly without requiring backend processing.
 
-A browser-based speech-to-text application built with **HTML, CSS, and vanilla JavaScript**.
-
-The application uses the browser's **Web Speech API** to recognize spoken English and display the resulting text in the interface in real time.
+![Project Preview](https://github.com/SalmaTech-03/Fullstack/blob/main/Speech-to-Text%20Project/project.png)
 
 ---
 
-## Problem
+## Features
 
-Typing is not always the fastest way to enter short pieces of information.
-
-Users may want to quickly capture:
-
-- Notes
-- Ideas
-- Short messages
-- Spoken information
-- Text while working hands-free
-
-The goal of this project is to provide a simple interface where users can speak naturally and see the recognized text without manually typing it.
+- **Real-Time Speech Recognition:** Uses the browser's native `webkitSpeechRecognition` / `SpeechRecognition` interface.
+- **Interim & Final Transcripts:** Differentiates real-time processing results from confirmed final text.
+- **Continuous Listening:** Set to process continuous speech input seamlessly until explicitly stopped.
+- **Minimal & Responsive Interface:** Clean UI styled with custom CSS and Font Awesome controls.
+- **Zero External Dependencies:** Runs natively in supported browsers without external audio libraries or server overhead.
 
 ---
 
-## Solution
+## Tech Stack
 
-The application provides a simple speech-to-text workflow:
-
-```text
-User speaks
-     ↓
-Microphone
-     ↓
-Browser Speech Recognition
-     ↓
-Web Speech API
-     ↓
-JavaScript processes the result
-     ↓
-Recognized text
-     ↓
-Text displayed on screen
-````
-
-The project keeps the architecture lightweight by handling speech recognition directly through the browser.
+- **Frontend:** HTML5, CSS3, Vanilla JavaScript (ES6+)
+- **API:** Web Speech API (`SpeechRecognition`)
+- **Icons:** Font Awesome
 
 ---
 
 ## How It Works
 
-### 1. Start Recognition
+1. **Activation:** Clicking **Start** instantiates the `SpeechRecognition` object and requests microphone permission.
+2. **Configuration:** The application sets `continuous = true`, `interimResults = true`, and sets language support to `en-US`.
+3. **Event Handling:** 
+   - `onresult`: Captures incoming speech frames, appending finalized text and displaying live interim text.
+   - `onerror` / `onend`: Safely handles session state and errors.
+4. **Termination:** Clicking **Stop** closes the active speech session and freezes the current transcript.
 
-The user clicks the **Start** button.
+---
 
-JavaScript creates a speech-recognition instance and starts listening to the microphone.
+## Getting Started
 
-### 2. Speech Recognition
+### Prerequisites
+- A modern Web Browser with Web Speech API support (Google Chrome recommended)
+- A working microphone
 
-The browser processes the user's speech through the Web Speech API.
+### Local Setup
 
-The application is configured for:
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/SalmaTech-03/Fullstack.git](https://github.com/SalmaTech-03/Fullstack.git)
 
-```text
-Language: en-US
-Continuous recognition: Enabled
-Interim results: Enabled
 ```
 
-### 3. Process Results
+2. **Navigate to the project directory:**
+```bash
+cd "Speech-to-Text Project"
 
-JavaScript receives recognition events and processes the returned results.
-
-The application separates:
-
-* **Final transcript** — confirmed speech
-* **Interim transcript** — speech currently being recognized
-
-The transcript is then displayed in the application.
-
-### 4. Stop Recognition
-
-The user clicks the **Stop** button.
-
-The active recognition session is stopped.
-
----
-
-## Architecture
-
-```text
-┌───────────────────────┐
-│         User          │
-│       Speaks          │
-└───────────┬───────────┘
-            │
-            ▼
-┌───────────────────────┐
-│       Browser         │
-│   Microphone Input    │
-└───────────┬───────────┘
-            │
-            ▼
-┌───────────────────────┐
-│    Web Speech API     │
-│  Speech Recognition   │
-└───────────┬───────────┘
-            │
-            ▼
-┌───────────────────────┐
-│     JavaScript        │
-│ Result Processing     │
-└───────────┬───────────┘
-            │
-            ▼
-┌───────────────────────┐
-│      Web Interface    │
-│   Transcript Display  │
-└───────────────────────┘
 ```
 
----
 
-## Use Cases
+3. **Run the application:**
+Open `index.html` directly in your browser, or launch it using **Live Server** in VS Code.
+4. **Usage:**
+* Allow microphone permissions when prompted.
+* Click **Start** and begin speaking.
+* Click **Stop** when complete.
 
-The speech-to-text interaction demonstrated in this project can be useful for:
 
-| Area         | Example                                    |
-| ------------ | ------------------------------------------ |
-| Note Taking  | Quickly capture short notes                |
-| Productivity | Enter text using voice                     |
-| Education    | Experiment with browser speech recognition |
-| Prototyping  | Build and test voice-based interactions    |
-| Voice Input  | Provide an alternative to typing           |
-
-This project was created primarily as an **educational implementation** of browser-based speech recognition.
 
 ---
 
-## Technology Stack
-
-| Technology         | Purpose                                 |
-| ------------------ | --------------------------------------- |
-| **HTML5**          | Application structure                   |
-| **CSS3**           | Layout and visual styling               |
-| **JavaScript**     | Speech recognition logic and UI updates |
-| **Web Speech API** | Speech recognition                      |
-| **Font Awesome**   | Microphone and stop icons               |
-
----
-
-## Project Structure
+## Repository Structure
 
 ```text
-Speech-to-Text/
+Speech-to-Text Project/
 │
-├── index.html
-├── style.css
-├── script.js
-└── README.md
+├── index.html    # Application layout and control buttons
+├── style.css     # UI styles and responsive visual elements
+├── script.js    # SpeechRecognition logic and DOM updates
+└── README.md     # Documentation
+
 ```
 
-### `index.html`
+---
 
-Contains the application structure, transcript area and Start/Stop controls.
+## Browser Support & Notes
 
-### `style.css`
-
-Controls the layout, typography, buttons, spacing and overall interface design.
-
-### `script.js`
-
-Handles speech recognition, recognition events, transcript processing, error handling and stopping recognition.
+* **Primary Support:** Built and tested for **Google Chrome**. Support in other browsers depends on their native support for the Web Speech API.
+* **Microphone Permissions:** Requires HTTPS or `localhost` to access browser microphone APIs.
 
 ---
 
-## Run Locally
+## Related Projects
 
-### Requirements
+* **[React Version](https://www.google.com/search?q=../speech-to-text-react/)** — A component-based version of this project built using React.
 
-* A browser with Web Speech API speech-recognition support
-* Working microphone
-* VS Code with Live Server recommended
-
-### Steps
-
-Clone the repository:
-
-```bash
-git clone <your-repository-url>
 ```
 
-Open the project:
-
-```bash
-cd Speech-to-Text
 ```
-
-Open `index.html` using **Live Server**.
-
-Allow microphone access when the browser asks for permission.
-
-Then:
-
-1. Click **Start**
-2. Speak into the microphone
-3. View the recognized text
-4. Click **Stop** when finished
-
----
-
-## React Version
-
-A React-based version of this project is also available with a more structured implementation and additional development work.
-
-👉 **[Click here to view the React version](../speech-to-text-react/)**
-
-> Update the link above with the actual GitHub path if the React project is stored in a separate repository.
-
----
-
-## Design Decisions
-
-The project intentionally uses the browser's Web Speech API instead of introducing a separate speech-processing backend.
-
-This keeps the implementation focused on:
-
-* Browser speech recognition
-* JavaScript event handling
-* Real-time transcript updates
-* Frontend interaction
-
-The main trade-off is that speech-recognition availability and accuracy depend on the browser and its speech-recognition implementation.
-
----
-
-## Limitations
-
-The current implementation has a few limitations:
-
-* Recognition is configured for **English (`en-US`)**
-* Speech-recognition support varies between browsers
-* Recognition accuracy can vary depending on microphone quality, background noise, pronunciation and speaking conditions
-* Transcript data is only displayed in the current application session
-* No persistent database storage is implemented
-* No backend server is used
-
----
-
-## Browser Support
-
-Speech recognition support depends on the browser.
-
-**Google Chrome** was used for development and testing of this project.
-
----
-
-## Educational Purpose
-
-This project was developed to understand how browser-based speech recognition can be integrated into a web application using standard frontend technologies.
-
-It demonstrates practical use of:
-
-* HTML
-* CSS
-* JavaScript
-* Web Speech API
-* Event-driven programming
-* Real-time DOM updates
-* Basic error handling
-
-The project also provides a foundation for understanding how voice input can be incorporated into web applications.
-
----
-
-
-
-
